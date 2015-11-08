@@ -10,3 +10,7 @@ the server part
 ## Clone
 
 - clone the static repo in *spoken-english-assistant/*
+
+## Run
+
+- ``node server.js``
