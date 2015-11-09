@@ -37,7 +37,17 @@ factory = ChatterBotFactory()
 bot = factory.create(ChatterBotType.PANDORABOTS, 'b0dafd24ee35a477')
 botsession = bot.create_session()
 
-utterance = file(inpututtr_path).readline().strip()
+labeled_utterance = file(inpututtr_path).readline().strip().split('$')[-1]
+
+utterance = ''
+for i in labeled_utterance.split('>'):
+    if '<span' in i or '\\span' in i:
+        continue
+    elif '<' in i:
+        i = i[:-1]
+    utterance += i
+
+print utterance
 
 s = botsession.think(utterance);
 f = open(oupututtr_path, 'wb')
