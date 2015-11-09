@@ -36,12 +36,13 @@ var sr_chat = function(inputpath, transcriptpath, outputpath) {
       // extract the useful messages and write them in a file 'transcription_i.txt'
       // i is the sequence number
       // console.log(typeof res['results']);
-      if (res['results'][0] == undefined) {
+      if (res['results'][0] == undefined || res.results[0].alternatives[0].word_confidence == undefined) {
       	transcript = 'No speech!';
       	confidence = '1';
       	word_confidence = 'No speech';
       }
       else {
+		// console.log(res.results[0].alternatives[0]);
 	    // transcript = res.results[0].alternatives[0].transcript;
 	    var confidence = res.results[0].alternatives[0].confidence;
 	    var word_confidence = res.results[0].alternatives[0].word_confidence;
