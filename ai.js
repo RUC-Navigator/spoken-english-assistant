@@ -30,7 +30,7 @@ var sr_chat = function(inputpath, transcriptpath, outputpath) {
   // asynchronous recognization, so we have to write the result in a file
   speech_to_text.recognize(params, function(err, res) {
     if (err)
-      console.log(err);
+      console.log('can\'t recognize error', err);
     // if the wave is correctly recognized
     else {
       // extract the useful messages and write them in a file 'transcription_i.txt'
@@ -46,7 +46,7 @@ var sr_chat = function(inputpath, transcriptpath, outputpath) {
 	    // transcript = res.results[0].alternatives[0].transcript;
 	    var confidence = res.results[0].alternatives[0].confidence;
 	    var word_confidence = res.results[0].alternatives[0].word_confidence;
-		console.log(word_confidence);
+		console.log('word confidence', word_confidence);
       var transcript = '';
       for (var i=0; i<word_confidence.length; i++) {
         if (word_confidence[i][1] < 0.2)

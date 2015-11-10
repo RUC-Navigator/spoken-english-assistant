@@ -41,13 +41,13 @@ labeled_utterance = file(inpututtr_path).readline().strip().split('$')[-1]
 
 utterance = ''
 for i in labeled_utterance.split('>'):
-    if '<span' in i or '\\span' in i:
-        continue
+    if '<span' in i:
+        i = i.split('<')[0]
     elif '<' in i:
-        i = i[:-1]
+        i = i[:-6]
     utterance += i
 
-print utterance
+# print utterance
 
 s = botsession.think(utterance);
 f = open(oupututtr_path, 'wb')
