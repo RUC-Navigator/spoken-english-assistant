@@ -17,7 +17,7 @@ app.get('/', function (req, res) {
   res.sendFile('static/index.html', {root: './'});
 });
 
-app.post('/postaudio', multipartMiddleware, function (req, res) {
+app.post('/src/postaudio', multipartMiddleware, function (req, res) {
 	// 存文件
 	var fname = req.body.fname || 'file' + Math.floor(Math.random() * 1000000) + '.wav';
 	var filedata = req.body.data;
@@ -46,7 +46,7 @@ app.post('/postaudio', multipartMiddleware, function (req, res) {
 	});
 });
 // 轮询，如果文件已生成，返回status 0及文件路径
-app.get('/getresult', function (req, res) {
+app.get('/src/getresult', function (req, res) {
 	var filename = getFileName(req.query.id);
 	var outfile = OUT_PATH + filename;	
 	var scriptfile = outfile + '_transcription';
