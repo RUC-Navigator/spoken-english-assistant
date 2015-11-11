@@ -66,7 +66,7 @@ var sr_chat = function(inputpath, transcriptpath, outputpath) {
           // send the transcription file to the user
 
           // chat with robot
-          exec('python chatwithrobot.py '+transcriptpath+' '+outputpath+'_transcription', function(error, stdout, stderr){
+          exec('python chatwithrobot.py '+transcriptpath+' '+outputpath+'_out.txt', function(error, stdout, stderr){
             // if chat successful, then generate audio file 'output_i.wav'
             if(stdout.length>1) {
               console.log('Bot:', stdout);
@@ -76,7 +76,7 @@ var sr_chat = function(inputpath, transcriptpath, outputpath) {
                 accept: 'audio/wav'
               };
               // Pipe the synthesized text to a file
-              text_to_speech.synthesize(params).pipe(fs.createWriteStream(outputpath));
+              text_to_speech.synthesize(params).pipe(fs.createWriteStream(outputpath+'.wav'));
 
               /************ TO BE DONE ******************/
               // send the audio file to user

@@ -6,18 +6,19 @@ var multipartMiddleware = multipart();
 
 var app = express();
 
-
 var STATIC_PATH = 'static';			// 文件路径
 var UPLOAD_PATH = STATIC_PATH + '/uploads/';	// 上传文件目录
 var OUT_PATH = STATIC_PATH + '/out/';			// 处理后生成文件的目录
-
 
 // ROUTES
 app.get('/', function (req, res) {
   res.sendFile('static/index.html', {root: './'});
 });
 
-app.post('/postaudio', multipartMiddleware, function (req, res) {
+// case 3: free conversation
+// the user post an audio, and then generate the transcription of the audio
+// and the response audio with its transcription
+app.post('/case3_postaudio', multipartMiddleware, function (req, res) {
 	// 存文件
 	var fname = req.body.fname || 'file' + Math.floor(Math.random() * 1000000) + '.wav';
 	var filedata = req.body.data;
@@ -25,7 +26,7 @@ app.post('/postaudio', multipartMiddleware, function (req, res) {
 	var data = filedata.substr(filedata.indexOf(',') + 1);
 
 	var b = new Buffer(data, 'base64');
-	var filepath = UPLOAD_PATH + fname;
+	var filepath = UPLOAD_PATH + 'case3/' + fname;
 	
 	fs.writeFile(filepath, b, 'binary',function (err) {
 		if (err) {
@@ -41,28 +42,32 @@ app.post('/postaudio', multipartMiddleware, function (req, res) {
 				id: fname
 			});
 			// 处理
-			handleFile(filepath);
+			case3_freeconv(filepath);
 		}
 	});
 });
-// 轮询，如果文件已生成，返回status 0及文件路径
-app.get('/getresult', function (req, res) {
-	var filename = getFileName(req.query.id);
-	var outfile = OUT_PATH + filename;	
-	var scriptfile = outfile + '_transcription';
 
-	fs.exists(outfile, function (exists) {
+// 轮询，如果文件已生成，返回status 0及文件路径
+app.get('/case3_getresult', function (req, res) {
+	var fname = getFileName(req.query.id);
+	var rfname = fname.substring(0,fname.length-4);
+	var outwave = OUT_PATH + 'case3/' + fname;
+	var transcipt = OUT_PATH + 'case3/' + rfname;
+
+	console.log(fname, rfname, outwave, transcipt);
+
+	fs.exists(outwave, function (exists) {
 		if (exists) {
-			fs.readFile(scriptfile, 'utf-8', function (err, data) {
+			fs.readFile(transcipt+'_upload.txt', 'utf-8', function (err, uploadscript) {
 				if (err) {
 					console.log(err);
 				}
-				fs.readFile(outfile + '.txt', 'utf-8', function (err, trans) {
+				fs.readFile(transcipt+'_out.txt', 'utf-8', function (err, outscript) {
 					res.json({
 						status: 0, 
-						path: outfile.replace('static', ''),
-						txt: data,
-						pre: trans
+						path: outwave.replace('static', ''),
+						txt: outscript,
+						pre: uploadscript
 					});
 				});
 			});			
@@ -73,7 +78,7 @@ app.get('/getresult', function (req, res) {
 });
 
 // 处理上传来的音频文件并输出生成文件
-var getFileName = function (filepath) {
+getFileName = function (filepath) {
 	// console.log('filepath', filepath);
 	if (filepath!=undefined) {
 		var fname = filepath.split('/');
@@ -81,15 +86,14 @@ var getFileName = function (filepath) {
 		return fname;
 	}
 };
-function handleFile(filepath) {
+
+function case3_freeconv(filepath) {
 	var fname = getFileName(filepath);
-	var outputWav = OUT_PATH + fname;
-	var outputScript = OUT_PATH + fname + '.txt';
-	ai(filepath, outputScript, outputWav);
+	var rfname = fname.substring(0,fname.length-4);
+	var outputpath = OUT_PATH + 'case3/' + rfname;
+	var ftranscipt = OUT_PATH + 'case3/' + rfname + '_upload.txt';
+	ai(filepath, ftranscipt, outputpath);
 }
-
-
-
 
 
 
