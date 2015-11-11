@@ -85,7 +85,7 @@ app.get('/case1_getresult', function (req, res) {
 // case 3: free conversation
 // the user post an audio, and then generate the transcription of the audio
 // and the response audio with its transcription
-app.post('/case3_postaudio', multipartMiddleware, function (req, res) {
+app.post('/src/postaudio', multipartMiddleware, function (req, res) {
 	// 存文件
 	var fname = req.body.fname || 'file' + Math.floor(Math.random() * 1000000) + '.wav';
 	var filedata = req.body.data;
@@ -115,7 +115,7 @@ app.post('/case3_postaudio', multipartMiddleware, function (req, res) {
 });
 
 // 轮询，如果文件已生成，返回status 0及文件路径
-app.get('/case3_getresult', function (req, res) {
+app.get('/src/getresult', function (req, res) {
 	var fname = getFileName(req.query.id);
 	var rfname = fname.substring(0,fname.length-4);
 	var outwave = OUT_PATH + 'case3/' + fname;
