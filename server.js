@@ -59,6 +59,29 @@ function case1_fixedscript(filepath, script) {
 	case1(filepath, outputpath, script);
 }
 
+// 轮询，如果文件已生成，返回status 0及word error
+app.get('/case1_getresult', function (req, res) {
+	var fname = getFileName(req.query.id);
+	var rfname = fname.substring(0,fname.length-4);
+	var worderror = OUT_PATH + 'case1/' + rfname + '_out.txt';
+
+	fs.exists(worderror, function (exists) {
+		if (exists) {
+			fs.readFile(worderror, 'utf-8', function (err, outscript) {
+				if (err) {
+					console.log(err);
+				}
+				res.json({
+					status: 0, 
+					txt: outscript,
+				});
+			});			
+		} else {
+			res.json({statu: -1, msg: '请稍候'});
+		}
+	});
+});
+
 // case 3: free conversation
 // the user post an audio, and then generate the transcription of the audio
 // and the response audio with its transcription
