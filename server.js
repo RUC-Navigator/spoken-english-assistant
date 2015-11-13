@@ -23,11 +23,11 @@ app.post('/src/1_postaudio', multipartMiddleware, function (req, res) {
 
 	// 存文件
 	var fname = req.body.fname || 'file' + Math.floor(Math.random() * 1000000) + '.wav';
-	var script = req.body.script;
+	var script = req.body.txt;
 	var filedata = req.body.data;
 
 	// should be comment
-	script = 'what a lovely day, isn\'t it';
+	//script = 'what a lovely day, isn\'t it';
 
 	var data = filedata.substr(filedata.indexOf(',') + 1);
 

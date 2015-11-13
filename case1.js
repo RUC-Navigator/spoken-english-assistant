@@ -43,7 +43,6 @@ var worderror = function(inputpath, outputpath, script) {
       
       for (var i=0; i<word_confidence.length; i++) {
         word_confidence[i][0] = word_confidence[i][0].toLowerCase();
-        console.log(script, word_confidence[i][0], script.indexOf(word_confidence[i][0]));
         for (var j=0; j<script_tokens.length; j++) {
           if (word_confidence[i][0] == script_tokens[j])
             tokens_confidence[j] = word_confidence[i][1];
