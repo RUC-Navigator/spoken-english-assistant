@@ -16,14 +16,11 @@ app.get('/', function (req, res) {
   res.sendFile('static/index.html', {root: './'});
 });
 
-<<<<<<< HEAD
 // case 1: fixed script
 // the user post an audio and the script
 // return the errors words and href of the word
 app.post('/src/1_postaudio', multipartMiddleware, function (req, res) {
-=======
-app.post('/src/postaudio', multipartMiddleware, function (req, res) {
->>>>>>> 069872dfe0d71d1ca2e691c7bdb609a0fadf9520
+
 	// 存文件
 	var fname = req.body.fname || 'file' + Math.floor(Math.random() * 1000000) + '.wav';
 	var script = req.body.script;
@@ -119,18 +116,11 @@ app.post('/src/3_postaudio', multipartMiddleware, function (req, res) {
 });
 
 // 轮询，如果文件已生成，返回status 0及文件路径
-<<<<<<< HEAD
 app.get('/src/3_getresult', function (req, res) {
 	var fname = getFileName(req.query.id);
 	var rfname = fname.substring(0,fname.length-4);
 	var outwave = OUT_PATH + 'case3/' + fname;
 	var transcipt = OUT_PATH + 'case3/' + rfname;
-=======
-app.get('/src/getresult', function (req, res) {
-	var filename = getFileName(req.query.id);
-	var outfile = OUT_PATH + filename;	
-	var scriptfile = outfile + '_transcription';
->>>>>>> 069872dfe0d71d1ca2e691c7bdb609a0fadf9520
 
 	fs.exists(outwave, function (exists) {
 		if (exists) {
