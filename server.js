@@ -19,14 +19,14 @@ app.get('/', function (req, res) {
 // case 1: fixed script
 // the user post an audio and the script
 // return the errors words and href of the word
-app.post('/case1_postaudio', multipartMiddleware, function (req, res) {
+app.post('/src/1_postaudio', multipartMiddleware, function (req, res) {
 	// 存文件
 	var fname = req.body.fname || 'file' + Math.floor(Math.random() * 1000000) + '.wav';
 	var script = req.body.script;
 	var filedata = req.body.data;
 
 	// should be comment
-	script = 'happy new year';
+	script = 'what a lovely day, isn\'t it';
 
 	var data = filedata.substr(filedata.indexOf(',') + 1);
 
@@ -60,7 +60,7 @@ function case1_fixedscript(filepath, script) {
 }
 
 // 轮询，如果文件已生成，返回status 0及word error
-app.get('/case1_getresult', function (req, res) {
+app.get('/src/1_getresult', function (req, res) {
 	var fname = getFileName(req.query.id);
 	var rfname = fname.substring(0,fname.length-4);
 	var worderror = OUT_PATH + 'case1/' + rfname + '_out.txt';
@@ -85,7 +85,7 @@ app.get('/case1_getresult', function (req, res) {
 // case 3: free conversation
 // the user post an audio, and then generate the transcription of the audio
 // and the response audio with its transcription
-app.post('/src/postaudio', multipartMiddleware, function (req, res) {
+app.post('/src/3_postaudio', multipartMiddleware, function (req, res) {
 	// 存文件
 	var fname = req.body.fname || 'file' + Math.floor(Math.random() * 1000000) + '.wav';
 	var filedata = req.body.data;
@@ -115,7 +115,7 @@ app.post('/src/postaudio', multipartMiddleware, function (req, res) {
 });
 
 // 轮询，如果文件已生成，返回status 0及文件路径
-app.get('/src/getresult', function (req, res) {
+app.get('/src/3_getresult', function (req, res) {
 	var fname = getFileName(req.query.id);
 	var rfname = fname.substring(0,fname.length-4);
 	var outwave = OUT_PATH + 'case3/' + fname;
