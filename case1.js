@@ -10,7 +10,7 @@ var speech_to_text = watson.speech_to_text({
 });
 
 var worderror = function(inputpath, outputpath, script) {
-  script_tokens = script.toLowerCase().split(' ');
+  script_tokens = script.toLowerCase().split(/[, .?!]/);
   tokens_confidence = new Array(script_tokens.length);
   for (var i=0; i<tokens_confidence.length; i++)
     tokens_confidence[i] = 0;
@@ -29,15 +29,14 @@ var worderror = function(inputpath, outputpath, script) {
       console.log('can\'t recognize error', err);
     // if the wave is correctly recognized
     else {
+      var word_url = 'http://cn.bing.com/dict/dict?q=';
       // console.log(typeof res['results']);
       if (res['results'][0] == undefined || res.results[0].alternatives[0].word_confidence == undefined) {
-      	confidence = '1';
-      	word_confidence = '';
+        transcript = '';
       }
       else {
 	    var confidence = res.results[0].alternatives[0].confidence;
 	    var word_confidence = res.results[0].alternatives[0].word_confidence;
-      var word_url = 'http://cn.bing.com/dict/dict?q='
 		  console.log('word confidence', word_confidence);
 
       
@@ -48,16 +47,16 @@ var worderror = function(inputpath, outputpath, script) {
             tokens_confidence[j] = word_confidence[i][1];
         }
       }
+    }
       var transcript = '';
       for (var i=0; i<tokens_confidence.length; i++) {
-        if (tokens_confidence[i] < 0.2)
-          transcript = transcript + script_tokens[i]+','+word_url+script_tokens[i]+','
+        if (script_tokens[i]!='' && tokens_confidence[i] < 0.2)
+          transcript = transcript + script_tokens[i]+'@'+word_url+script_tokens[i]+'$'
       }
 	  }
 
-      fs.writeFile(outputpath, transcript);
+      fs.writeFile(outputpath, transcript.substring(0,transcript.length-1));
       
-    }
   });
 
 }
